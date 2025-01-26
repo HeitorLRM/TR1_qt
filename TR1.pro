@@ -10,13 +10,18 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Receiver_App.cpp \
+    Rmain.cpp \
+    Tmain.cpp \
     Transmitter_App.cpp \
     main.cpp
 
 HEADERS += \
+    Receiver_App.h \
     Transmitter_App.h
 
 FORMS += \
+    Receiver_App.ui \
     Transmitter_App.ui
 
 # Default rules for deployment.

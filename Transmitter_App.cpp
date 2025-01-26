@@ -8,6 +8,7 @@
 #include <QtCharts/QCategoryAxis>
 
 #include <iostream>
+#include <unistd.h>
 
 
 TransmitterAPP::TransmitterAPP(QWidget *parent)
@@ -15,6 +16,7 @@ TransmitterAPP::TransmitterAPP(QWidget *parent)
     , ui(new Ui::Transmitter)
 {
     ui->setupUi(this);
+    ui->label_pid->setText(QString("PID: ") + QString::number(getpid()));
 }
 
 TransmitterAPP::~TransmitterAPP()
