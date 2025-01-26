@@ -10,21 +10,36 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Receiver_App.cpp \
+    Media.cpp \
+    R_App.cpp \
+    R_Decoder.cpp \
+    R_Demodulator.cpp \
     Rmain.cpp \
+    Sync.cpp \
+    T_App.cpp \
+    T_Encoder.cpp \
+    T_Modulator.cpp \
     Tmain.cpp \
-    Transmitter_App.cpp \
     main.cpp
 
 HEADERS += \
-    Receiver_App.h \
-    Transmitter_App.h
+    Media.hpp \
+    R_App.h \
+    R_Decoder.hpp \
+    R_Demodulator.hpp \
+    Sync.hpp \
+    T_App.h \
+    T_Encoder.hpp \
+    T_Modulator.hpp
 
 FORMS += \
-    Receiver_App.ui \
-    Transmitter_App.ui
+    R_App.ui \
+    T_App.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    TR1.pro.user

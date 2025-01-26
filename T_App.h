@@ -1,5 +1,5 @@
-#ifndef TRANSMITTER_APP_H
-#define TRANSMITTER_APP_H
+#ifndef T_APP_H
+#define T_APP_H
 
 #include <QMainWindow>
 
@@ -23,4 +23,4 @@ private slots:
 private:
     Ui::Transmitter *ui;
 };
-#endif // TRANSMITTER_APP_H
+#endif // T_APP_H

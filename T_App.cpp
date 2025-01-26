@@ -1,5 +1,5 @@
-#include "Transmitter_App.h"
-#include "ui_Transmitter_App.h"
+#include "T_App.h"
+#include "ui_T_App.h"
 
 #include <QtWidgets/QMainWindow>
 #include <QtCharts/QChartView>

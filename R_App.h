@@ -1,5 +1,5 @@
-#ifndef RECEIVER_APP_H
-#define RECEIVER_APP_H
+#ifndef R_APP_H
+#define R_APP_H
 
 #include <QMainWindow>
 
@@ -23,4 +23,4 @@ private slots:
 private:
     Ui::Receiver *ui;
 };
-#endif // RECEIVER_APP_H
+#endif // R_APP_H

@@ -1,5 +1,5 @@
-#include "Receiver_App.h"
-#include "ui_Receiver_App.h"
+#include "R_App.h"
+#include "ui_R_App.h"
 
 #include <QtWidgets/QMainWindow>
 #include <QtCharts/QChartView>
