@@ -26,6 +26,7 @@ public:
 public slots:
     void on_receive_message(std::string s);
     void on_receive_bit(bool);
+    void on_modulation_selected(QAction*);
 
 signals:
     void settings_changed(R_Settings);

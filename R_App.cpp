@@ -8,6 +8,7 @@
 #include <QtCharts/QLegend>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QCategoryAxis>
+#include <QActionGroup>
 
 #include <iostream>
 #include <unistd.h>
@@ -49,6 +50,14 @@ ReceiverAPP::ReceiverAPP(QWidget *parent)
     ui->label_pid->setText(QString("PID: ") + QString::number(getpid()));
 
     make_bitstream_chart();
+
+    QActionGroup* mod_group = new QActionGroup(this);
+    mod_group->addAction(ui->actionNRZ_Polar);
+    mod_group->addAction(ui->actionManchester);
+    mod_group->addAction(ui->actionBipolar);
+    mod_group->setExclusive(true);
+    QObject::connect(mod_group, &QActionGroup::triggered, this, &ReceiverAPP::on_modulation_selected);
+
 }
 
 ReceiverAPP::~ReceiverAPP()
@@ -116,3 +125,10 @@ void ReceiverAPP::on_actionSignal_Resolution_triggered()
     emit settings_changed(settings);
 }
 
+void ReceiverAPP::on_modulation_selected(QAction* action) {
+    auto text = action->text().toStdString();
+    if (text == "&NRZ-Polar")   settings.modulation = R_Settings::MODS::NRZ_POLAR;
+    if (text == "&Manchester")  settings.modulation = R_Settings::MODS::MANCHESTER;
+    if (text == "&Bipolar")     settings.modulation = R_Settings::MODS::BIPOLAR;
+    emit settings_changed(settings);
+}

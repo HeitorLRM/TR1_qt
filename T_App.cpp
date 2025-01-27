@@ -9,8 +9,10 @@
 #include <QtCharts/QLegend>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QCategoryAxis>
+#include <QActionGroup>
 
 #include <unistd.h>
+#include <iostream>
 
 void TransmitterAPP::make_signal_chart() {
     QLineSeries *series = new QLineSeries();
@@ -79,6 +81,18 @@ TransmitterAPP::TransmitterAPP(QWidget *parent)
 
     make_bitstream_chart();
     make_signal_chart();
+
+    auto mod_group = new QActionGroup(this);
+    mod_group->addAction(ui->actionNRZ_Polar);
+    mod_group->addAction(ui->actionManchester);
+    mod_group->addAction(ui->actionBipolar);
+    mod_group->addAction(ui->actionASK);
+    mod_group->addAction(ui->actionFSK);
+    mod_group->addAction(ui->action8_QAM);
+    mod_group->setExclusive(true);
+    QObject::connect(mod_group, &QActionGroup::triggered, this, &TransmitterAPP::on_modulation_selected);
+
+
 }
 
 TransmitterAPP::~TransmitterAPP()
@@ -174,3 +188,13 @@ void TransmitterAPP::on_actionError_triggered()
     emit settings_changed(settings);
 }
 
+void TransmitterAPP::on_modulation_selected(QAction* action) {
+    auto text = action->text().toStdString();
+    if (text == "&NRZ-Polar")   settings.modulation = T_Settings::MODS::NRZ_POLAR;
+    if (text == "&Manchester")  settings.modulation = T_Settings::MODS::MANCHESTER;
+    if (text == "&Bipolar")     settings.modulation = T_Settings::MODS::BIPOLAR;
+    if (text == "&ASK")         settings.modulation = T_Settings::MODS::_ASK;
+    if (text == "&FSK")         settings.modulation = T_Settings::MODS::_FSK;
+    if (text == "&8-QAM")       settings.modulation = T_Settings::MODS::_8_QAM;
+    emit settings_changed(settings);
+}

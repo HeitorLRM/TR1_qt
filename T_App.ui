@@ -286,7 +286,7 @@
   </action>
   <action name="actionError">
    <property name="text">
-    <string>Error</string>
+    <string>&amp;Error</string>
    </property>
   </action>
  </widget>

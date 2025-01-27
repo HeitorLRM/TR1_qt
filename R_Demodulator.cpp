@@ -42,7 +42,7 @@ bool Demodulator::read_bit() {
 }
 
 bool Demodulator::calc_bit() {
-	switch (modulation) {
+    switch (Sync::GetRSettings().modulation) {
     case R_Settings::MODS::NRZ_POLAR: return NRZ_polar();
     case R_Settings::MODS::MANCHESTER: return manchester();
     case R_Settings::MODS::BIPOLAR: return bipolar();
@@ -64,10 +64,10 @@ bool Demodulator::NRZ_polar() {
 }
 
 bool Demodulator::manchester() {
-	auto quarterpoint = Sync::current_bit() + Sync::get_bit_duration()/4;
+    auto quarterpoint = Sync::current_bit() + Sync::get_bit_duration()*0.75;
 	std::this_thread::sleep_until(quarterpoint);
 	float energy = Medium::Instance(Medium::READ)->listen();
-	return energy < 0;
+    return energy > 0;
 
 }
 

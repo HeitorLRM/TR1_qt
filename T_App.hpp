@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <deque>
+#include <QActionGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,6 +26,7 @@ public:
 public slots:
     void on_send_bit(bool);
     void on_send_signal(float);
+    void on_modulation_selected(QAction*);
 
 signals:
     void send_message(std::string);
