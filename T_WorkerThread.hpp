@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include "T_App.hpp"
 
 class T_Worker : public QThread {
     Q_OBJECT
@@ -17,6 +18,7 @@ public:
 public slots:
     void shouldRun(bool b) {should_run = b;}
     void transmit_request(std::string);
+    void set_settings(T_Settings);
 
 signals:
     void sent_bit(bool);

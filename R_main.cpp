@@ -15,10 +15,11 @@ int Rmain(int argc, char *argv[]) {
     QApplication a(argc, argv);
     ReceiverAPP w;
 
+    QObject::connect(&w, &ReceiverAPP::settings_changed, worker, &R_Worker::set_settings);
     QObject::connect(worker, &R_Worker::got_message, &w, &ReceiverAPP::on_receive_message);
     QObject::connect(worker, &R_Worker::got_bit, &w, &ReceiverAPP::on_receive_bit);
-    QObject::connect(worker, &R_Worker::got_energy, &w, &ReceiverAPP::on_receive_signal);
 
+    w.set_settings(R_Settings());
     w.show();
     return a.exec();
 }

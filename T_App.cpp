@@ -1,5 +1,8 @@
 #include "T_App.hpp"
 #include "ui_T_App.h"
+#include "freq_window.h"
+#include "resolution_window.h"
+#include "error_window.h"
 
 #include <QtWidgets/QMainWindow>
 #include <QtCharts/QChartView>
@@ -7,7 +10,6 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QCategoryAxis>
 
-#include <iostream>
 #include <unistd.h>
 
 void TransmitterAPP::make_signal_chart() {
@@ -112,7 +114,7 @@ void TransmitterAPP::on_send_signal(float energy) {
     if (signal_chart_points.size() >= 8 * settings.resolution) {
         signal_chart_points.pop_front();
     }
-    float spacing = 1.0 / 8 / settings.resolution;
+    float spacing = 1.0 / 8.0 / settings.resolution;
     QPointF new_point(1, energy);
     signal_chart_points.push_back(new_point);
 
@@ -133,5 +135,42 @@ void TransmitterAPP::on_btn_send_clicked()
     std::string message = ui->input_box->toPlainText().toStdString();
     ui->input_box->setPlainText("");
     emit send_message(message);
+}
+
+void TransmitterAPP::set_settings(T_Settings s) {
+    settings = s;
+    emit settings_changed(settings);
+}
+
+void TransmitterAPP::on_actionFrequency_triggered()
+{
+    freq_window w;
+    w.set_result(settings.frequency);
+    w.setModal(true);
+    w.exec();
+    settings.frequency = w.get_result();
+    emit settings_changed(settings);
+}
+
+
+void TransmitterAPP::on_actionSignal_Resolution_triggered()
+{
+    resolution_window w;
+    w.set_result(settings.resolution);
+    w.setModal(true);
+    w.exec();
+    settings.resolution = w.get_result();
+    emit settings_changed(settings);
+}
+
+
+void TransmitterAPP::on_actionError_triggered()
+{
+    error_window w;
+    w.set_result(settings.error_chance);
+    w.setModal(true);
+    w.exec();
+    settings.error_chance = w.get_result();
+    emit settings_changed(settings);
 }
 

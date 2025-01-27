@@ -2,6 +2,7 @@
 #include "Media.hpp"
 #include "Sync.hpp"
 #include "T_WorkerThread.hpp"
+#include "T_Settings.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -41,13 +42,13 @@ std::ostream& Modulator::out() {
 }
 
 float Modulator::calc_energy(bool bit) {
-	switch (modulation) {
-	case NRZ_POLAR: return NRZ_polar(bit);
-	case MANCHESTER: return manchester(bit);
-	case BIPOLAR: return bipolar(bit);
-	case _ASK: return amp_shift_key(bit);
-	case _FSK: return freq_shift_key(bit);
-	case _8_QAM: return eight_quadrature(bit);
+    switch (Sync::GetTSettings().modulation) {
+    case T_Settings::MODS::NRZ_POLAR: return NRZ_polar(bit);
+    case T_Settings::MODS::MANCHESTER: return manchester(bit);
+    case T_Settings::MODS::BIPOLAR: return bipolar(bit);
+    case T_Settings::MODS::_ASK: return amp_shift_key(bit);
+    case T_Settings::MODS::_FSK: return freq_shift_key(bit);
+    case T_Settings::MODS::_8_QAM: return eight_quadrature(bit);
 	}
 }
 

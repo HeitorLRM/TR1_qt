@@ -1,6 +1,8 @@
 #ifndef R_APP_H
 #define R_APP_H
 
+#include "R_Settings.hpp"
+
 #include <QMainWindow>
 #include <deque>
 
@@ -10,11 +12,6 @@ class Receiver;
 }
 QT_END_NAMESPACE
 
-struct R_Settings {
-    float frequency;
-    unsigned resolution;
-    float error_chance;
-}typedef R_Settings;
 
 class ReceiverAPP : public QMainWindow
 {
@@ -24,21 +21,27 @@ public:
     ReceiverAPP(QWidget *parent = nullptr);
     ~ReceiverAPP();
 
+    void set_settings(R_Settings);
+
 public slots:
     void on_receive_message(std::string s);
     void on_receive_bit(bool);
-    void on_receive_signal(float);
+
+signals:
+    void settings_changed(R_Settings);
 
 private slots:
     void on_btn_clear_clicked();
 
+    void on_actionFrequency_triggered();
+
+    void on_actionSignal_Resolution_triggered();
+
 private:
-    R_Settings settings = {1.0, 10, 0.0};
+    R_Settings settings;
     Ui::Receiver *ui;
-    std::deque<QPointF> signal_chart_points;
     std::deque<QPointF> bits_chart_points;
 
-    void make_signal_chart();
     void make_bitstream_chart();
 
 };

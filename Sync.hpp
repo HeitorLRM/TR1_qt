@@ -1,10 +1,15 @@
 #pragma once
 
 #include <chrono>
+#include "T_Settings.hpp"
+#include "R_Settings.hpp"
 
 namespace Sync {
 
-extern unsigned resolution;
+void SetTSettings(T_Settings);
+void SetRSettings(R_Settings);
+T_Settings GetTSettings();
+R_Settings GetRSettings();
 
 void runT(unsigned long = 1);
 void TupdateB(int);

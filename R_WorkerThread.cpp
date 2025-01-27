@@ -13,7 +13,6 @@ R_Worker* R_Worker::Instance() {
 }
 
 void R_Worker::run() {
-    Receiver::Demodulator::Instance()->modulation = Receiver::Demodulator::NRZ_POLAR;
     std::this_thread::sleep_until(Sync::next_byte());
 
     while (should_run) {
@@ -32,4 +31,6 @@ void R_Worker::emit_energy(float f) {
     emit got_energy(f);
 }
 
-
+void R_Worker::set_settings(R_Settings settings) {
+    Sync::SetRSettings(settings);
+}

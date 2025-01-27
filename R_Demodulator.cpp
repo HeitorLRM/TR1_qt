@@ -1,6 +1,7 @@
 
 #include "R_Demodulator.hpp"
 #include "R_WorkerThread.hpp"
+#include "R_Settings.hpp"
 #include "Media.hpp"
 #include "Sync.hpp"
 
@@ -42,20 +43,20 @@ bool Demodulator::read_bit() {
 
 bool Demodulator::calc_bit() {
 	switch (modulation) {
-	case NRZ_POLAR: return NRZ_polar();
-	case MANCHESTER: return manchester();
-	case BIPOLAR: return bipolar();
+    case R_Settings::MODS::NRZ_POLAR: return NRZ_polar();
+    case R_Settings::MODS::MANCHESTER: return manchester();
+    case R_Settings::MODS::BIPOLAR: return bipolar();
 	}
 	return false;
 }
 
 bool Demodulator::NRZ_polar() {
-    unsigned midpoint = Sync::resolution/2;
+    unsigned midpoint = Sync::GetRSettings().resolution/2;
     float energy;
-    for (unsigned i = 0; i < Sync::resolution; i++) {
+    for (unsigned i = 0; i < Sync::GetRSettings().resolution; i++) {
         float listen = Medium::Instance(Medium::READ)->listen();
         if (i == midpoint) energy = listen;
-        std::this_thread::sleep_until(Sync::current_bit() + Sync::get_bit_duration()/Sync::resolution);
+        std::this_thread::sleep_until(Sync::current_bit() + Sync::get_bit_duration()/Sync::GetRSettings().resolution);
         R_Worker::Instance()->emit_energy(listen);
     }
 

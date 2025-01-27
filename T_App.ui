@@ -150,6 +150,7 @@
     </property>
     <addaction name="actionFrequency"/>
     <addaction name="actionSignal_Resolution"/>
+    <addaction name="actionError"/>
    </widget>
    <widget class="QMenu" name="menuModulation">
     <property name="title">
@@ -181,12 +182,12 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionFrequency">
    <property name="text">
-    <string>Frequency</string>
+    <string>&amp;Frequency</string>
    </property>
   </action>
   <action name="actionSignal_Resolution">
    <property name="text">
-    <string>Signal Resolution</string>
+    <string>&amp;Signal Resolution</string>
    </property>
   </action>
   <action name="actionNRZ_Polar">
@@ -197,7 +198,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>NRZ-Polar</string>
+    <string>&amp;NRZ-Polar</string>
    </property>
   </action>
   <action name="actionManchester">
@@ -205,7 +206,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Manchester</string>
+    <string>&amp;Manchester</string>
    </property>
   </action>
   <action name="actionBipolar">
@@ -213,7 +214,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Bipolar</string>
+    <string>&amp;Bipolar</string>
    </property>
   </action>
   <action name="actionASK">
@@ -221,7 +222,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>ASK</string>
+    <string>&amp;ASK</string>
    </property>
   </action>
   <action name="actionFSK">
@@ -229,7 +230,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>FSK</string>
+    <string>&amp;FSK</string>
    </property>
   </action>
   <action name="action8_QAM">
@@ -237,7 +238,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>8-QAM</string>
+    <string>&amp;8-QAM</string>
    </property>
   </action>
   <action name="actionByte_Counting">
@@ -248,7 +249,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Byte Counting</string>
+    <string>&amp;Byte Counting</string>
    </property>
   </action>
   <action name="actionBite_Insertion">
@@ -256,7 +257,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Bite Insertion</string>
+    <string>Bite &amp;Insertion</string>
    </property>
   </action>
   <action name="actionParity_Bit">
@@ -264,7 +265,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Parity Bit</string>
+    <string>&amp;Parity Bit</string>
    </property>
   </action>
   <action name="actionCRC">
@@ -272,7 +273,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>CRC</string>
+    <string>&amp;CRC</string>
    </property>
   </action>
   <action name="actionHamming">
@@ -280,7 +281,12 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hamming</string>
+    <string>&amp;Hamming</string>
+   </property>
+  </action>
+  <action name="actionError">
+   <property name="text">
+    <string>Error</string>
    </property>
   </action>
  </widget>

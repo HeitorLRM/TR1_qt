@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QObject>
+#include <R_App.hpp>
 
 class R_Worker : public QThread {
     Q_OBJECT
@@ -16,6 +17,7 @@ public:
 
 public slots:
     void shouldRun(bool b) {should_run = b;}
+    void set_settings(R_Settings);
 
 signals:
     void got_message(std::string);

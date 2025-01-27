@@ -1,5 +1,6 @@
 #include "Sync.hpp"
 #include "T_Modulator.hpp"
+#include "T_Settings.hpp"
 #include <chrono>
 #include <thread>
 
@@ -7,7 +8,26 @@ using namespace std::chrono;
 
 static microseconds bit_duration = 200ms;
 static steady_clock::time_point begint = steady_clock::now();
-unsigned Sync::resolution = 10;
+
+static T_Settings tsettings;
+void Sync::SetTSettings(T_Settings s) {
+    tsettings = s;
+    set_bit_freq(s.frequency);
+}
+
+static R_Settings rsettings;
+void Sync::SetRSettings(R_Settings s) {
+    rsettings = s;
+    set_bit_freq(s.frequency);
+}
+
+T_Settings Sync::GetTSettings() {
+    return tsettings;
+}
+
+R_Settings Sync::GetRSettings() {
+    return rsettings;
+}
 
 void Sync::runT(unsigned long b_cycles) {
 	for (unsigned long i = 0; i < b_cycles; i++) {
@@ -21,8 +41,8 @@ void Sync::runT(unsigned long b_cycles) {
 			Tupdateb(j);
 
 			auto cb = current_bit();
-			auto sub_interval = Sync::get_bit_duration() / resolution;
-			for (unsigned k = 0; k < resolution; k++) {
+            auto sub_interval = Sync::get_bit_duration() / GetTSettings().resolution;
+            for (unsigned k = 0; k < GetTSettings().resolution; k++) {
 				Tupdates(k);
 				std::this_thread::sleep_until(cb + (k+1)*sub_interval);
 			}

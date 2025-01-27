@@ -1,5 +1,7 @@
 #pragma once
 
+#include "T_Settings.hpp"
+
 #include <ostream>
 #include <sstream>
 
@@ -18,9 +20,6 @@ public:
 
 	std::ostream& out();
 	
-	enum MODS { NRZ_POLAR, MANCHESTER , BIPOLAR, _ASK, _FSK, _8_QAM};
-	MODS modulation = NRZ_POLAR;
-
 private:
 	float calc_energy(bool);
 	float NRZ_polar(bool);

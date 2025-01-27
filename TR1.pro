@@ -22,23 +22,34 @@ SOURCES += \
     T_Modulator.cpp \
     T_WorkerThread.cpp \
     T_main.cpp \
-    main.cpp
+    error_window.cpp \
+    freq_window.cpp \
+    main.cpp \
+    resolution_window.cpp
 
 HEADERS += \
     Media.hpp \
     R_App.hpp \
     R_Decoder.hpp \
     R_Demodulator.hpp \
+    R_Settings.hpp \
     R_WorkerThread.hpp \
     Sync.hpp \
     T_App.hpp \
     T_Encoder.hpp \
     T_Modulator.hpp \
-    T_WorkerThread.hpp
+    T_Settings.hpp \
+    T_WorkerThread.hpp \
+    error_window.h \
+    freq_window.h \
+    resolution_window.h
 
 FORMS += \
     R_App.ui \
-    T_App.ui
+    T_App.ui \
+    error_window.ui \
+    freq_window.ui \
+    resolution_window.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
