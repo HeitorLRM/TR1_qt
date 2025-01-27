@@ -22,7 +22,6 @@ private:
 	bool bipolar();
 
 	float amp = 1;
-	unsigned char bit_resolution = 2;
 };
 
 }

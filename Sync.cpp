@@ -5,9 +5,9 @@
 
 using namespace std::chrono;
 
-static microseconds bit_duration = 25ms;
+static microseconds bit_duration = 200ms;
 static steady_clock::time_point begint = steady_clock::now();
-unsigned Sync::resolution = 4;
+unsigned Sync::resolution = 10;
 
 void Sync::runT(unsigned long b_cycles) {
 	for (unsigned long i = 0; i < b_cycles; i++) {

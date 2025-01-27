@@ -5,6 +5,12 @@
 #include "Sync.hpp"
 
 #include <thread>
+#include <memory>
+
+R_Worker* R_Worker::Instance() {
+    static std::unique_ptr<R_Worker> instance(new R_Worker);
+    return instance.get();
+}
 
 void R_Worker::run() {
     Receiver::Demodulator::Instance()->modulation = Receiver::Demodulator::NRZ_POLAR;
@@ -17,3 +23,13 @@ void R_Worker::run() {
         }
     }
 }
+
+void R_Worker::emit_bit(bool bit) {
+    emit got_bit(bit);
+}
+
+void R_Worker::emit_energy(float f) {
+    emit got_energy(f);
+}
+
+

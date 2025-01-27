@@ -1,5 +1,6 @@
 
 #include "R_Demodulator.hpp"
+#include "R_WorkerThread.hpp"
 #include "Media.hpp"
 #include "Sync.hpp"
 
@@ -33,6 +34,7 @@ bool Demodulator::read_bit() {
 	auto sync_bit = Sync::next_bit();
 
 	bool b = calc_bit();
+    R_Worker::Instance()->emit_bit(b);
 
 	std::this_thread::sleep_until(sync_bit);
 	return b;
@@ -48,9 +50,15 @@ bool Demodulator::calc_bit() {
 }
 
 bool Demodulator::NRZ_polar() {
-	auto midpoint = Sync::current_bit() + Sync::get_bit_duration()/2;
-	std::this_thread::sleep_until(midpoint);
-	float energy = Medium::Instance(Medium::READ)->listen();
+    unsigned midpoint = Sync::resolution/2;
+    float energy;
+    for (unsigned i = 0; i < Sync::resolution; i++) {
+        float listen = Medium::Instance(Medium::READ)->listen();
+        if (i == midpoint) energy = listen;
+        std::this_thread::sleep_until(Sync::current_bit() + Sync::get_bit_duration()/Sync::resolution);
+        R_Worker::Instance()->emit_energy(listen);
+    }
+
 	return energy > 0;
 }
 

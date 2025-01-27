@@ -1,6 +1,8 @@
 #include "T_Modulator.hpp"
 #include "Media.hpp"
 #include "Sync.hpp"
+#include "T_WorkerThread.hpp"
+
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -17,11 +19,13 @@ void Modulator::update_byte(int) {
 void Modulator::update_bit(int i) {
 	sending_bit = active_byte & (1 << (7-i));
 	if (sending_bit) bipolar_prev_one = -bipolar_prev_one;
+    T_Worker::Instance()->emit_bit(sending_bit);
 }
 
 void Modulator::update_sub(int) {
 	float signal = calc_energy(sending_bit);
 	Medium::Instance(Medium::WRITE)->transmit(signal);
+    T_Worker::Instance()->emit_energy(signal);
 }
 
 Modulator* Modulator::Instance() {

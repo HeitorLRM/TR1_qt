@@ -34,7 +34,6 @@ private:
 	bool sending_bit = 0x0;
 	std::stringstream data_stream;
 	float amp = 1;
-	unsigned char bit_resolution = 2;
 	int bipolar_prev_one = 1;
 };
 

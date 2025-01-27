@@ -6,13 +6,21 @@
 
 class T_Worker : public QThread {
     Q_OBJECT
-public:
+private:
     T_Worker() = default;
+public:
+    static T_Worker* Instance();
     void run() override;
+    void emit_bit(bool);
+    void emit_energy(float);
 
 public slots:
     void shouldRun(bool b) {should_run = b;}
     void transmit_request(std::string);
+
+signals:
+    void sent_bit(bool);
+    void sent_energy(float);
 
 private:
     bool should_run = true;

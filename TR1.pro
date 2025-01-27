@@ -26,12 +26,12 @@ SOURCES += \
 
 HEADERS += \
     Media.hpp \
-    R_App.h \
+    R_App.hpp \
     R_Decoder.hpp \
     R_Demodulator.hpp \
     R_WorkerThread.hpp \
     Sync.hpp \
-    T_App.h \
+    T_App.hpp \
     T_Encoder.hpp \
     T_Modulator.hpp \
     T_WorkerThread.hpp
