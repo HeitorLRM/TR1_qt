@@ -2,6 +2,7 @@
 #define T_APP_H
 
 #include <QMainWindow>
+#include "T_WorkerThread.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,6 +17,9 @@ class TransmitterAPP : public QMainWindow
 public:
     TransmitterAPP(QWidget *parent = nullptr);
     ~TransmitterAPP();
+
+signals:
+    void send_message(std::string);
 
 private slots:
     void on_btn_send_clicked();

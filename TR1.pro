@@ -14,12 +14,14 @@ SOURCES += \
     R_App.cpp \
     R_Decoder.cpp \
     R_Demodulator.cpp \
-    Rmain.cpp \
+    R_WorkerThread.cpp \
+    R_main.cpp \
     Sync.cpp \
     T_App.cpp \
     T_Encoder.cpp \
     T_Modulator.cpp \
-    Tmain.cpp \
+    T_WorkerThread.cpp \
+    T_main.cpp \
     main.cpp
 
 HEADERS += \
@@ -27,10 +29,12 @@ HEADERS += \
     R_App.h \
     R_Decoder.hpp \
     R_Demodulator.hpp \
+    R_WorkerThread.hpp \
     Sync.hpp \
     T_App.h \
     T_Encoder.hpp \
-    T_Modulator.hpp
+    T_Modulator.hpp \
+    T_WorkerThread.hpp
 
 FORMS += \
     R_App.ui \

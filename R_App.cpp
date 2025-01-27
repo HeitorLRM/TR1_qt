@@ -44,6 +44,11 @@ ReceiverAPP::~ReceiverAPP()
     delete ui;
 }
 
+void ReceiverAPP::on_receive_message(std::string message) {
+    QString new_message = ui->output_box->toPlainText() + QString::fromStdString(message);
+    ui->output_box->setPlainText(new_message);
+}
+
 void ReceiverAPP::on_btn_clear_clicked()
 {
     ui->output_box->setPlainText("");

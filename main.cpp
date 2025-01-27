@@ -1,5 +1,5 @@
-#include <iostream>
 #include <unistd.h>
+#include <stdexcept>
 
 
 int Tmain(int argc, char *argv[]);
@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
         return -1;
     case 0:
         // Child process
-        std::cout << "child" << std::endl;
         Rmain(argc, argv);
         break;
     default:

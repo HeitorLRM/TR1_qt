@@ -26,8 +26,8 @@ TransmitterAPP::~TransmitterAPP()
 
 void TransmitterAPP::on_btn_send_clicked()
 {
-    std::cout << "!" << std::endl;
-
-
+    std::string message = ui->input_box->toPlainText().toStdString();
+    ui->input_box->setPlainText("");
+    emit send_message(message);
 }
 

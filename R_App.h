@@ -17,6 +17,9 @@ public:
     ReceiverAPP(QWidget *parent = nullptr);
     ~ReceiverAPP();
 
+public slots:
+    void on_receive_message(std::string s);
+
 private slots:
     void on_btn_clear_clicked();
 
