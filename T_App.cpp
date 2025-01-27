@@ -35,7 +35,7 @@ void TransmitterAPP::make_signal_chart() {
     series->attachAxis(axisZero);
 
 
-    chart->setTitle("Signal Sent");
+    chart->setTitle("Signal");
 
     QChartView* chartView = ui->chart_signal;
     chartView->setChart(chart);
@@ -88,7 +88,7 @@ TransmitterAPP::TransmitterAPP(QWidget *parent)
     mod_group->addAction(ui->actionBipolar);
     mod_group->addAction(ui->actionASK);
     mod_group->addAction(ui->actionFSK);
-    mod_group->addAction(ui->action8_QAM);
+    mod_group->addAction(ui->action4_QAM);
     mod_group->setExclusive(true);
     QObject::connect(mod_group, &QActionGroup::triggered, this, &TransmitterAPP::on_modulation_selected);
 
@@ -195,6 +195,6 @@ void TransmitterAPP::on_modulation_selected(QAction* action) {
     if (text == "&Bipolar")     settings.modulation = T_Settings::MODS::BIPOLAR;
     if (text == "&ASK")         settings.modulation = T_Settings::MODS::_ASK;
     if (text == "&FSK")         settings.modulation = T_Settings::MODS::_FSK;
-    if (text == "&8-QAM")       settings.modulation = T_Settings::MODS::_8_QAM;
+    if (text == "&4-QAM")       settings.modulation = T_Settings::MODS::_4_QAM;
     emit settings_changed(settings);
 }

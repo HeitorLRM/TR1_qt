@@ -5,6 +5,7 @@
 #include "T_Settings.hpp"
 
 #include <cmath>
+#include <complex>
 #include <iostream>
 #include <memory>
 
@@ -53,7 +54,7 @@ float Modulator::calc_energy(bool bit) {
     case T_Settings::MODS::BIPOLAR: return bipolar(bit);
     case T_Settings::MODS::_ASK: return amp_shift_key(bit);
     case T_Settings::MODS::_FSK: return freq_shift_key(bit);
-    case T_Settings::MODS::_8_QAM: return eight_quadrature(bit);
+    case T_Settings::MODS::_4_QAM: return eight_quadrature(bit);
 	}
 }
 
@@ -84,5 +85,28 @@ float Modulator::freq_shift_key(bool bit) {
 }
 
 float Modulator::eight_quadrature(bool) {
-	return 0;
+    int quarter = 4.0*(Sync::current_bit() - Sync::current_byte()) / Sync::get_byte_duration();
+    char data = active_byte;
+    data = data >> (3-quarter);
+    data &= 0x3;
+
+    std::complex<float> c;
+    switch (data) {
+    case 0x0:
+        c = {1,1};
+        break;
+    case 0x1:
+        c = {1,-1};
+        break;
+    case 0x2:
+        c = {-1,1};
+        break;
+    case 0x3:
+        c = {-1,-1};
+        break;
+    }
+    float phase = std::arg(c) + 2*M_PI*Sync::bit_progress();
+    float ampl = std::abs(c);
+    std::cout << int(data) << ' ' << std::arg(c) << ' ' << ampl << std::endl;
+    return ampl * sin(phase);
 }

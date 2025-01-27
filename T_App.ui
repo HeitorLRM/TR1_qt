@@ -161,7 +161,7 @@
     <addaction name="actionBipolar"/>
     <addaction name="actionASK"/>
     <addaction name="actionFSK"/>
-    <addaction name="action8_QAM"/>
+    <addaction name="action4_QAM"/>
    </widget>
    <widget class="QMenu" name="menuEncoding">
     <property name="title">
@@ -233,12 +233,12 @@
     <string>&amp;FSK</string>
    </property>
   </action>
-  <action name="action8_QAM">
+  <action name="action4_QAM">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;8-QAM</string>
+    <string>&amp;4-QAM</string>
    </property>
   </action>
   <action name="actionByte_Counting">
