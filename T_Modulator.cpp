@@ -20,6 +20,11 @@ void Modulator::update_byte(int) {
 void Modulator::update_bit(int i) {
 	sending_bit = active_byte & (1 << (7-i));
 	if (sending_bit) bipolar_prev_one = -bipolar_prev_one;
+
+    float r = (float)(rand()) / (float)(RAND_MAX);
+    if (r < Sync::GetTSettings().error_chance)
+        sending_bit = !sending_bit;
+
     T_Worker::Instance()->emit_bit(sending_bit);
 }
 
