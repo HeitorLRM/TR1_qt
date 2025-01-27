@@ -20,8 +20,7 @@ void T_Worker::emit_energy(float f) {
 }
 
 void T_Worker::run() {
-    Transmitter::Modulator::Instance()->modulation = Transmitter::Modulator::_ASK;
-    Transmitter::Encoder::Instance()->send("Hello World!");
+    Transmitter::Modulator::Instance()->modulation = Transmitter::Modulator::NRZ_POLAR;
     std::this_thread::sleep_until(Sync::next_byte());
     while(true)
         Sync::runT();
