@@ -22,18 +22,11 @@ public:
 	
 private:
 	float calc_energy(bool);
-	float NRZ_polar(bool);
-	float manchester(bool);
-	float bipolar(bool);
-	float amp_shift_key(bool);
-	float freq_shift_key(bool);
-	float eight_quadrature(bool);
 
 	char active_byte = 0x0;
 	bool sending_bit = 0x0;
+    bool first_sub = true;
 	std::stringstream data_stream;
-	float amp = 1;
-	int bipolar_prev_one = 1;
 };
 
 }

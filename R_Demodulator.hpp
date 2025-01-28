@@ -1,6 +1,7 @@
 #pragma once
 
 #include "R_Settings.hpp"
+#include <vector>
 
 namespace Receiver {
 
@@ -16,11 +17,6 @@ public:
 
 private:
 	bool calc_bit();
-	bool NRZ_polar();
-	bool manchester();
-	bool bipolar();
-
-	float amp = 1;
 };
 
 }

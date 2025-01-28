@@ -4,9 +4,11 @@
 #include "R_Settings.hpp"
 #include "Media.hpp"
 #include "Sync.hpp"
+#include "CamadaFisica.hpp"
 
 #include <memory>
 #include <thread>
+#include <iostream>
 
 using Receiver::Demodulator;
 
@@ -42,39 +44,24 @@ bool Demodulator::read_bit() {
 }
 
 bool Demodulator::calc_bit() {
-    switch (Sync::GetRSettings().modulation) {
-    case R_Settings::MODS::NRZ_POLAR: return NRZ_polar();
-    case R_Settings::MODS::MANCHESTER: return manchester();
-    case R_Settings::MODS::BIPOLAR: return bipolar();
-	}
-	return false;
-}
+    unsigned resolution = Sync::GetRSettings().resolution;
 
-bool Demodulator::NRZ_polar() {
-    unsigned midpoint = Sync::GetRSettings().resolution/2;
-    float energy;
-    for (unsigned i = 0; i < Sync::GetRSettings().resolution; i++) {
-        float listen = Medium::Instance(Medium::READ)->listen();
-        if (i == midpoint) energy = listen;
-        std::this_thread::sleep_until(Sync::current_bit() + Sync::get_bit_duration()/Sync::GetRSettings().resolution);
-        R_Worker::Instance()->emit_energy(listen);
+    std::vector<float> signal;
+    signal.reserve(resolution);
+
+    auto cb = Sync::current_bit();
+    auto sub_duration = Sync::get_bit_duration() / resolution;
+    for (unsigned i = 0; i < resolution; i++) {
+        float listened = Medium::Instance(Medium::READ)->listen();
+        signal.push_back(listened);
+        R_Worker::Instance()->emit_energy(listened);
+        std::this_thread::sleep_until(cb + i*sub_duration);
     }
 
-	return energy > 0;
-}
-
-bool Demodulator::manchester() {
-    auto quarterpoint = Sync::current_bit() + Sync::get_bit_duration()*0.75;
-	std::this_thread::sleep_until(quarterpoint);
-	float energy = Medium::Instance(Medium::READ)->listen();
-    return energy > 0;
-
-}
-
-bool Demodulator::bipolar() {
-	static const float threshold = 0.5;
-	auto midpoint = Sync::current_bit() + Sync::get_bit_duration()/2;
-	std::this_thread::sleep_until(midpoint);
-	float energy = Medium::Instance(Medium::READ)->listen();
-	return (energy > threshold*amp || energy < -threshold*amp);
+    switch (Sync::GetRSettings().modulation) {
+    case R_Settings::MODS::NRZ_POLAR: return DEMODULATOR::NRZ_polar(signal);
+    case R_Settings::MODS::MANCHESTER: return DEMODULATOR::manchester(signal);
+    case R_Settings::MODS::BIPOLAR: return DEMODULATOR::bipolar(signal);
+	}
+	return false;
 }

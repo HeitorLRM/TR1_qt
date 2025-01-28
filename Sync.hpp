@@ -28,5 +28,6 @@ std::chrono::steady_clock::time_point current_bit();
 std::chrono::steady_clock::time_point next_bit();
 
 float bit_progress();
+float byte_progress();
 
 }

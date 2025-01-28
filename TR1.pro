@@ -10,6 +10,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CamadaFisica.cpp \
+    CamadeEnlace.cpp \
     Media.cpp \
     R_App.cpp \
     R_Decoder.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
     resolution_window.cpp
 
 HEADERS += \
+    CamadaEnlace.hpp \
+    CamadaFisica.hpp \
     Media.hpp \
     R_App.hpp \
     R_Decoder.hpp \

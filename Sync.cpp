@@ -107,3 +107,9 @@ float Sync::bit_progress() {
 	microseconds delta = duration_cast<microseconds>(steady_clock::now() - current_bit());
 	return float(delta.count()) / float(bit_duration.count());
 }
+
+
+float Sync::byte_progress() {
+    microseconds delta = duration_cast<microseconds>(steady_clock::now() - current_byte());
+    return float(delta.count()) / float(get_byte_duration().count());
+}
