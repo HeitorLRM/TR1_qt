@@ -27,6 +27,8 @@ public slots:
     void on_send_bit(bool);
     void on_send_signal(float);
     void on_modulation_selected(QAction*);
+    void on_framing_selected(QAction*);
+    void on_error_mode_selected(QAction*);
 
 signals:
     void send_message(std::string);

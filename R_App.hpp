@@ -27,6 +27,8 @@ public slots:
     void on_receive_message(std::string s);
     void on_receive_bit(bool);
     void on_modulation_selected(QAction*);
+    void on_framing_selected(QAction*);
+    void on_error_mode_selected(QAction*);
 
 signals:
     void settings_changed(R_Settings);
@@ -40,10 +42,11 @@ private slots:
 
 private:
     R_Settings settings;
-    Ui::Receiver *ui;
     std::deque<QPointF> bits_chart_points;
 
     void make_bitstream_chart();
+
+    Ui::Receiver *ui;
 
 };
 #endif // R_APP_H

@@ -165,6 +165,7 @@
     <addaction name="actionCRC"/>
     <addaction name="separator"/>
     <addaction name="actionHamming"/>
+    <addaction name="actionNone"/>
    </widget>
    <addaction name="menuSimulation"/>
    <addaction name="menuModulation"/>
@@ -273,6 +274,17 @@
    </property>
    <property name="text">
     <string>&amp;Hamming</string>
+   </property>
+  </action>
+  <action name="actionNone">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>None</string>
    </property>
   </action>
  </widget>

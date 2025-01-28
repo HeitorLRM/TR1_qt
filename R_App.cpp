@@ -58,6 +58,19 @@ ReceiverAPP::ReceiverAPP(QWidget *parent)
     mod_group->setExclusive(true);
     QObject::connect(mod_group, &QActionGroup::triggered, this, &ReceiverAPP::on_modulation_selected);
 
+    QActionGroup* frame_group = new QActionGroup(this);
+    frame_group->addAction(ui->actionByte_Counting);
+    frame_group->addAction(ui->actionBite_Insertion);
+    frame_group->setExclusive(true);
+    QObject::connect(frame_group, &QActionGroup::triggered, this, &ReceiverAPP::on_framing_selected);
+
+    QActionGroup* error_group = new QActionGroup(this);
+    error_group->addAction(ui->actionHamming);
+    error_group->addAction(ui->actionCRC);
+    error_group->addAction(ui->actionParity_Bit);
+    error_group->addAction(ui->actionNone);
+    error_group->setExclusive(true);
+    QObject::connect(error_group, &QActionGroup::triggered, this, &ReceiverAPP::on_error_mode_selected);
 }
 
 ReceiverAPP::~ReceiverAPP()
@@ -130,5 +143,21 @@ void ReceiverAPP::on_modulation_selected(QAction* action) {
     if (text == "&NRZ-Polar")   settings.modulation = R_Settings::MODS::NRZ_POLAR;
     if (text == "&Manchester")  settings.modulation = R_Settings::MODS::MANCHESTER;
     if (text == "&Bipolar")     settings.modulation = R_Settings::MODS::BIPOLAR;
+    emit settings_changed(settings);
+}
+
+void ReceiverAPP::on_framing_selected(QAction* action) {
+    std::string text = action->text().toStdString();
+    if (text == "Bite &Insertion") settings.framing = FRAMING::BYTE_INSERION;
+    if (text == "&Byte Counting")  settings.framing = FRAMING::BYTE_COUNT;
+    emit settings_changed(settings);
+}
+
+void ReceiverAPP::on_error_mode_selected(QAction* action) {
+    std::string text = action->text().toStdString();
+    if (text == "&None")        settings.err_handling = ERROR::NONE;
+    if (text == "&Hamming")     settings.err_handling = ERROR::HAMMING;
+    if (text == "&CRC")         settings.err_handling = ERROR::CRC;
+    if (text == "&Parity Bit")  settings.err_handling = ERROR::PARITY_BIT;
     emit settings_changed(settings);
 }
