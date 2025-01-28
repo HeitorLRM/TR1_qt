@@ -43,6 +43,8 @@ private slots:
 
     void on_actionError_triggered();
 
+    void on_btn_preview_clicked();
+
 private:
     T_Settings settings;
     std::deque<QPointF> signal_chart_points;

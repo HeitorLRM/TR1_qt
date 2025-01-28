@@ -27,6 +27,7 @@ SOURCES += \
     error_window.cpp \
     freq_window.cpp \
     main.cpp \
+    preview_window.cpp \
     resolution_window.cpp
 
 HEADERS += \
@@ -46,6 +47,7 @@ HEADERS += \
     T_WorkerThread.hpp \
     error_window.h \
     freq_window.h \
+    preview_window.h \
     resolution_window.h
 
 FORMS += \
@@ -53,6 +55,7 @@ FORMS += \
     T_App.ui \
     error_window.ui \
     freq_window.ui \
+    preview_window.ui \
     resolution_window.ui
 
 # Default rules for deployment.

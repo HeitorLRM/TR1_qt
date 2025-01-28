@@ -86,10 +86,29 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btn_send">
-          <property name="text">
-           <string>Send</string>
+         <widget class="QFrame" name="frame_5">
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
           </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QPushButton" name="btn_send">
+             <property name="text">
+              <string>Send</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_preview">
+             <property name="text">
+              <string>preview</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -298,7 +317,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>None</string>
+    <string>&amp;None</string>
    </property>
   </action>
  </widget>

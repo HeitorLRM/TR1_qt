@@ -2,6 +2,7 @@
 #include "ui_T_App.h"
 #include "freq_window.h"
 #include "resolution_window.h"
+#include "preview_window.h"
 #include "error_window.h"
 
 #include <QtWidgets/QMainWindow>
@@ -227,4 +228,74 @@ void TransmitterAPP::on_error_mode_selected(QAction* action) {
     if (text == "&Parity Bit")  settings.err_handling = ERROR::PARITY_BIT;
     emit settings_changed(settings);
 }
+
+void populate_series_digital(QLineSeries* series, const std::string& data) {
+    series->clear();
+
+    int current = 0;
+    for (auto it = data.begin(); it != data.end(); it++) {
+        for (int i = 7; i >= 0; i--) {
+            char c = *it;
+            bool bit = c & (1<<i);
+            *series << QPoint(current, bit);
+            current++;
+            *series << QPoint(current, bit);
+        }
+    }
+}
+
+void TransmitterAPP::on_btn_preview_clicked() {
+    Preview_Window w;
+
+    QPen pen(QRgb(0x005b96));
+    pen.setWidth(2);
+
+    QLineSeries
+        *msg_series = new QLineSeries,
+        *err_series = new QLineSeries,
+        *frm_series = new QLineSeries,
+        *sig_series = new QLineSeries;
+    QChart
+        *msg_chart = new QChart,
+        *err_chart = new QChart,
+        *frm_chart = new QChart,
+        *sig_chart = new QChart;
+
+
+    populate_series_digital(msg_series, "Hello world!");
+
+    msg_series->setPen(pen);
+    err_series->setPen(pen);
+    frm_series->setPen(pen);
+    sig_series->setPen(pen);
+
+    msg_chart->addSeries(msg_series);
+    err_chart->addSeries(err_series);
+    frm_chart->addSeries(frm_series);
+    sig_chart->addSeries(sig_series);
+
+    msg_chart->legend()->hide();
+    err_chart->legend()->hide();
+    frm_chart->legend()->hide();
+    sig_chart->legend()->hide();
+
+    msg_chart->createDefaultAxes();
+    err_chart->createDefaultAxes();
+    frm_chart->createDefaultAxes();
+    sig_chart->createDefaultAxes();
+
+    msg_chart->setTitle(QString("Message bit Representation"));
+    err_chart->setTitle(QString("Message After Added Redundancy"));
+    frm_chart->setTitle(QString("Framed bit Representation"));
+    sig_chart->setTitle(QString("Constructed signal"));
+
+    w.get_msg_chart()->setChart(msg_chart);
+    w.get_err_chart()->setChart(err_chart);
+    w.get_frm_chart()->setChart(frm_chart);
+    w.get_sig_chart()->setChart(sig_chart);
+
+    w.setModal(true);
+    w.exec();
+}
+
 
