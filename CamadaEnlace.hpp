@@ -28,4 +28,12 @@ std::string CRC(const std::string&);
 std::string Hamming(const std::string&);
 }
 
+namespace DECODER {
+
+std::string deframe_count();
+
+std::string deframe_insert();
+
+}
+
 #endif // CAMADAENLACE_HPP

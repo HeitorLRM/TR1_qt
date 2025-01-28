@@ -97,3 +97,30 @@ std::string ENCODER::CRC(const std::string& message) {
 std::string ENCODER::Hamming(const std::string& message) {
     return message;
 }
+
+
+std::string DECODER::deframe_count() {
+    unsigned char head = static_cast<char>(Receiver::Demodulator::Instance()->read_byte());
+    std::string message = "";
+    while(head--) {
+        message += Receiver::Demodulator::Instance()->read_byte();
+    }
+    return message;
+}
+
+std::string DECODER::deframe_insert() {
+    char head = Receiver::Demodulator::Instance()->read_byte();
+    if (head != ENCODER::flag)
+        return "";
+
+    std::string result = "";
+    while (true) {
+        char c = Receiver::Demodulator::Instance()->read_byte();
+        if (c == ENCODER::flag)
+            break;
+        if (c == ENCODER::esc)
+            c = Receiver::Demodulator::Instance()->read_byte();
+        result += c;
+    }
+    return result;
+}

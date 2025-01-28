@@ -18,6 +18,6 @@ Encoder::Encoder() {
 }
 
 void Encoder::send(const string& message) {
-    auto framed = ENCODER::encode_msg(message, FRAMING::BYTE_COUNT, ERROR::NONE);
+    auto framed = ENCODER::encode_msg(message, FRAMING::BYTE_INSERION, ERROR::NONE);
     Modulator::Instance()->out() << framed;
 }
