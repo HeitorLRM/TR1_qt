@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <deque>
 #include <QActionGroup>
+#include <QLineSeries>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -52,7 +53,8 @@ private:
 
     void make_signal_chart();
     void make_bitstream_chart();
-
+    void populate_series_digital(QLineSeries*, const std::string&);
+    void populate_series_analog(QLineSeries*, const std::string&);
     Ui::Transmitter *ui;
 };
 #endif // T_APP_H

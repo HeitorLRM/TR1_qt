@@ -229,7 +229,7 @@ void TransmitterAPP::on_error_mode_selected(QAction* action) {
     emit settings_changed(settings);
 }
 
-void populate_series_digital(QLineSeries* series, const std::string& data) {
+void TransmitterAPP::populate_series_digital(QLineSeries* series, const std::string& data) {
     series->clear();
 
     int current = 0;
@@ -244,12 +244,38 @@ void populate_series_digital(QLineSeries* series, const std::string& data) {
     }
 }
 
+
+void TransmitterAPP::populate_series_analog(QLineSeries* series, const std::string& data) {
+    series->clear();
+
+    float sub_bit_interval = 1.0/settings.resolution;
+    float current = 0;
+    for (auto it = data.begin(); it != data.end(); it++) {
+        for (int i = 7; i >= 0; i--) {
+            char c = *it;
+            bool bit = c & (1<<i);
+            for (uint j = 0; j < settings.resolution; j++) {
+                float energy = 0;
+                auto bit_progress = current - int(current);
+                auto byte_progress = current/8 - int(current/8);
+
+                switch (settings.modulation) {
+                case T_Settings::MODS::NRZ_POLAR: energy = MODULATOR::NRZ_polar(bit); break;
+                case T_Settings::MODS::MANCHESTER: energy = MODULATOR::manchester(bit, bit_progress); break;
+                case T_Settings::MODS::BIPOLAR: energy = MODULATOR::bipolar(bit, j == 0); break;
+                case T_Settings::MODS::_ASK: energy = MODULATOR::amp_shift_key(bit, bit_progress); break;
+                case T_Settings::MODS::_FSK: energy = MODULATOR::freq_shift_key(bit, bit_progress); break;
+                case T_Settings::MODS::_4_QAM: energy = MODULATOR::_4_quadrature(c, byte_progress); break;
+                }
+                *series << QPointF(current, energy);
+                current += sub_bit_interval;
+            }
+        }
+    }
+}
+
 void TransmitterAPP::on_btn_preview_clicked() {
     Preview_Window w;
-
-    QPen pen(QRgb(0x005b96));
-    pen.setWidth(2);
-
     QLineSeries
         *msg_series = new QLineSeries,
         *err_series = new QLineSeries,
@@ -261,8 +287,26 @@ void TransmitterAPP::on_btn_preview_clicked() {
         *frm_chart = new QChart,
         *sig_chart = new QChart;
 
+    std::string message = ui->input_box->toPlainText().toStdString();
+    populate_series_digital(msg_series, message);
 
-    populate_series_digital(msg_series, "Hello world!");
+    std::string after_error;
+    switch (settings.err_handling) {
+    case ERROR::NONE        : after_error = message; break;
+    case ERROR::PARITY_BIT  : after_error = ENCODER::parity(message); break;
+    case ERROR::CRC         : after_error = ENCODER::CRC(message); break;
+    case ERROR::HAMMING     : after_error = ENCODER::CRC(message); break;
+    default: break;
+    }
+    populate_series_digital(err_series, after_error);
+
+    std::string framed = ENCODER::encode_msg(message, settings.framing, settings.err_handling);
+    populate_series_digital(frm_series, framed);
+
+    populate_series_analog(sig_series, framed);
+
+    QPen pen(QRgb(0x005b96));
+    pen.setWidth(2);
 
     msg_series->setPen(pen);
     err_series->setPen(pen);
@@ -284,9 +328,9 @@ void TransmitterAPP::on_btn_preview_clicked() {
     frm_chart->createDefaultAxes();
     sig_chart->createDefaultAxes();
 
-    msg_chart->setTitle(QString("Message bit Representation"));
-    err_chart->setTitle(QString("Message After Added Redundancy"));
-    frm_chart->setTitle(QString("Framed bit Representation"));
+    msg_chart->setTitle(QString("Message Bit Representation"));
+    err_chart->setTitle(QString("Message After Error Detection Bits"));
+    frm_chart->setTitle(QString("Framed Message"));
     sig_chart->setTitle(QString("Constructed signal"));
 
     w.get_msg_chart()->setChart(msg_chart);

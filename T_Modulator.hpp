@@ -19,9 +19,9 @@ public:
 	static Modulator* Instance();
 
 	std::ostream& out();
-	
+    float calc_energy(bool);
+
 private:
-	float calc_energy(bool);
 
 	char active_byte = 0x0;
 	bool sending_bit = 0x0;
