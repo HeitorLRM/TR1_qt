@@ -7,7 +7,7 @@ enum FRAMING {BYTE_COUNT, BYTE_INSERION};
 enum ERROR {NONE, PARITY_BIT, CRC, HAMMING};
 
 namespace ENCODER {
-const unsigned frame_max_bytes = 10;
+const unsigned frame_max_bytes = 100;
 const char flag = 0x7E;
 const char esc = 0x7D;
 
@@ -33,6 +33,8 @@ namespace DECODER {
 std::string deframe_count();
 
 std::string deframe_insert();
+
+std::string detect_parity(const std::string&);
 
 }
 

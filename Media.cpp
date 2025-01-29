@@ -5,7 +5,6 @@
 
 std::unique_ptr<Medium> Medium::instance(new Medium());
 
-// Get method for singleton instance and defines wether the medium either reads or writes in this process.
 Medium* Medium::Instance(Medium::Permission p) {
 	if (instance->perm == NOT_SET) 
 		instance->Narrow(p);
@@ -40,7 +39,6 @@ Medium::~Medium() {
 	}
 }
 
-// Narrows instance permissions to read or write only and closes unused pipe endpoint. 
 void Medium::Narrow(Medium::Permission p) {
 	perm = p;
 

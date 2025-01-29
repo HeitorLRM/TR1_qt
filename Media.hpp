@@ -2,10 +2,6 @@
 
 #include <memory>
 
-// Medium is a singleton class responsible for inter-process comunication and represents guided or non-guided mediums of telecomunication.
-// After the program is forked, there will be one singleton instance per process.
-// Each process must either read or write to the medium
-
 class Medium {
 public:
 	enum Permission {
