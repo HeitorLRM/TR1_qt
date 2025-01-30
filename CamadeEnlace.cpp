@@ -2,6 +2,12 @@
 #include "R_Demodulator.hpp"
 
 std::string ENCODER::encode_msg(const std::string& message, FRAMING framing, ERROR error_mode) {
+    if (message.size() > max_bytes) {
+        std::string first(message.begin(), message.begin() + max_bytes);
+        std::string rest(message.begin() + max_bytes, message.end());
+        return encode_msg(first, framing, error_mode) + encode_msg(rest, framing, error_mode);
+    }
+
     // Codificamos a mensagem
     std::string err_encoded;
     switch (error_mode) {
@@ -24,23 +30,8 @@ std::string ENCODER::encode_msg(const std::string& message, FRAMING framing, ERR
 }
 
 std::string ENCODER::count_bytes(const std::string& message) {
-    std::string result = "";
-
-    unsigned max_bytes = frame_max_bytes - 1; // Consideramos o byte de contagem
-    if (message.size() > max_bytes) {
-        // Fazemos enquadramento dos que couberem e passamos o resto para outro quadro
-        auto split = message.begin() + max_bytes;
-        std::string first(message.begin(),split);
-        std::string rest(split, message.end());
-
-        result += count_bytes(first);
-        result += count_bytes(rest);
-        return result;
-    }
-
     unsigned char count = message.size(); // Byte de contagem
-    result = std::string{char(count)} + message;
-    return result;
+    return std::string{char(count)} + message;
 }
 
 std::string ENCODER::insert_bytes(const std::string & message) {
@@ -62,30 +53,7 @@ std::string ENCODER::fix_false_flags(std::string message) {
 std::string ENCODER::frame_flags(const std::string& data) {
     std::string result = "";
     result += flag;
-
-    for (unsigned i = 0; i < data.size(); i++) {
-        if (i >= frame_max_bytes - 2) { // Dividimos a mensagem em mais quadros quando não couber
-            result += flag;
-            std::string remainder(data.begin() + i, data.end());
-            return result + frame_flags(remainder);
-        }
-
-        if (data[i] == esc) {
-            if (i < frame_max_bytes - 3) { // A flag de escape não pode ser separada do que cancela.
-                result += data[i++];
-                result += data[i];
-                continue;
-            }
-            else { // Caso caibam no mesmo quadro
-                result += flag;
-                std::string remainder(data.begin() + i, data.end());
-                return result + frame_flags(remainder);
-            }
-        }
-
-        result += data[i];
-    }
-
+    result += data;
     result += flag;
     return result;
 }
@@ -145,7 +113,7 @@ std::string DECODER::deframe_insert() {
 
 std::string DECODER::detect_parity(const std::string& frame) {
     if (_parity(frame)) // Paridade, quando incluso bit de paridade, deve ser 0.
-        return "QUADRO COM ERRO";
+        return "\nQUADRO COM ERRO";
 
     return std::string(frame.begin(), frame.end() -1);
 }

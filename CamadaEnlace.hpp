@@ -7,7 +7,7 @@ enum FRAMING {BYTE_COUNT, BYTE_INSERION};
 enum ERROR {NONE, PARITY_BIT, CRC, HAMMING};
 
 namespace ENCODER {
-const unsigned frame_max_bytes = 100;
+const unsigned max_bytes = 16;
 const char flag = 0x7E;
 const char esc = 0x7D;
 
