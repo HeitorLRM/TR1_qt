@@ -258,7 +258,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;4-QAM</string>
+    <string>&amp;8-QAM</string>
    </property>
   </action>
   <action name="actionByte_Counting">

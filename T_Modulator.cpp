@@ -59,7 +59,7 @@ float Modulator::calc_energy(bool bit) {
     case T_Settings::MODS::BIPOLAR: return MODULATOR::bipolar(bit, first_sub);
     case T_Settings::MODS::_ASK: return MODULATOR::amp_shift_key(bit, bit_progress);
     case T_Settings::MODS::_FSK: return MODULATOR::freq_shift_key(bit, bit_progress);
-    case T_Settings::MODS::_4_QAM: return MODULATOR::_4_quadrature(active_byte, byte_progress);
+    case T_Settings::MODS::_8_QAM: return MODULATOR::_8_QAM(bit, bit_progress, first_sub);
     }
     return 0;
 }

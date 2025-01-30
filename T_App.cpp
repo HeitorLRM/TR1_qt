@@ -209,7 +209,7 @@ void TransmitterAPP::on_modulation_selected(QAction* action) {
     if (text == "&Bipolar")     settings.modulation = T_Settings::MODS::BIPOLAR;
     if (text == "&ASK")         settings.modulation = T_Settings::MODS::_ASK;
     if (text == "&FSK")         settings.modulation = T_Settings::MODS::_FSK;
-    if (text == "&4-QAM")       settings.modulation = T_Settings::MODS::_4_QAM;
+    if (text == "&8-QAM")       settings.modulation = T_Settings::MODS::_8_QAM;
     emit settings_changed(settings);
 }
 
@@ -265,7 +265,7 @@ void TransmitterAPP::populate_series_analog(QLineSeries* series, const std::stri
                 case T_Settings::MODS::BIPOLAR: energy = MODULATOR::bipolar(bit, j == 0); break;
                 case T_Settings::MODS::_ASK: energy = MODULATOR::amp_shift_key(bit, bit_progress); break;
                 case T_Settings::MODS::_FSK: energy = MODULATOR::freq_shift_key(bit, bit_progress); break;
-                case T_Settings::MODS::_4_QAM: energy = MODULATOR::_4_quadrature(c, byte_progress); break;
+                case T_Settings::MODS::_8_QAM: energy = MODULATOR::_8_QAM(bit, bit_progress, j == 0); break;
                 }
                 *series << QPointF(current, energy);
                 current += sub_bit_interval;

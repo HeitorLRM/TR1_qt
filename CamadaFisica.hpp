@@ -19,7 +19,7 @@ float amp_shift_key(bool bit, float bit_progress);
 
 float freq_shift_key(bool bit, float bit_progress);
 
-float _4_quadrature(char byte_data, float byte_progress);
+float _8_QAM(bool bit, float bit_progress, bool should_update = false);
 
 } // end Modulator
 

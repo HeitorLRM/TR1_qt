@@ -45,35 +45,46 @@ float MODULATOR::freq_shift_key(bool bit, float bit_progress) {
     return carrier * amplitude;
 }
 
-float MODULATOR::_4_quadrature(char byte_data, float byte_progress) {
-    // Queremos obter somente um par de bits
-    // Disso, dividimos o periodo do byte em 4 e lidamos com bits de dois a dois.
-    int quarter = 4.0 * byte_progress;
-    byte_data = byte_data >> (3-quarter);
-    byte_data &= 0x3; // 0b00000011
+float MODULATOR::_8_QAM(bool bit, float bit_progress, bool should_update) {
+    // Código para acumular 3 bits
+    static unsigned b_count = 0;
+    static unsigned char tribit = 0;
+    static unsigned char incoming_tribit = 0;
+    if (should_update) {
+        incoming_tribit <<= 1;
+        if (bit) incoming_tribit++;
+        b_count++;
+        b_count %= 3;
+        if (!b_count) {
+            tribit = incoming_tribit;
+            incoming_tribit = 0;
+        }
+    }
 
-    // O 4-QAM consegue codificar 2 bits em termos de fase e amplitude
+    // Queremos obter somente um trio de bits
+    // Disso, dividimos o periodo do byte e lidamos com bits de tres a tres.
+
+    // O 8-QAM consegue codificar 3 bits em termos de fase e amplitude
     std::complex<float> c; // numeros complexos em coordenadas polares tem fase e amplitude.
-    // A seguinte é a tabela que mapeia os 2 bits para numeros complexos.
-    switch (byte_data) {
-    case 0x0:
-        c = {1,1};
-        break;
-    case 0x1:
-        c = {1,-1};
-        break;
-    case 0x2:
-        c = {-1,1};
-        break;
-    case 0x3:
-        c = {-1,-1};
-        break;
+    float l = 0.707106781185; // sqrt(2)/2
+    // A seguinte é a tabela que mapeia os 3 bits para numeros complexos.
+
+    switch (tribit) {
+    case 0x0: c = { l,-l}; break;
+    case 0x1: c = { 1, 0}; break;
+    case 0x2: c = { l, l}; break;
+    case 0x3: c = { 0, 1}; break;
+    case 0x4: c = {-l, l}; break;
+    case 0x5: c = {-1, 0}; break;
+    case 0x6: c = {-l,-l}; break;
+    case 0x7: c = { 0,-1}; break;
+    default: break;
     }
     float phase    = std::arg(c);
     float amp_mult = std::abs(c); // Obtemos fase e amplitude
 
-    float dibit_progress = 4.0 * byte_progress - quarter; // O periodo engloba 2 bits
-    float t = 2.0 * M_PI * dibit_progress + phase;
+    float tribit_progress = (b_count + bit_progress)/3.0; // O periodo engloba 3 bits
+    float t = 2.0 * M_PI * tribit_progress + phase;
     float carrier = sin(t);
     float amp = amplitude * amp_mult;
 
