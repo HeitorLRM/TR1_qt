@@ -36,6 +36,8 @@ std::string deframe_insert();
 
 std::string detect_parity(const std::string&);
 
+std::string detect_crc(const std::string&);
+
 }
 
 #endif // CAMADAENLACE_HPP

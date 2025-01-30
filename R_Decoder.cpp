@@ -30,6 +30,7 @@ std::string Decoder::listen_frame() {
     switch (Sync::GetRSettings().err_handling) {
     case ERROR::NONE: return data;
     case ERROR::PARITY_BIT: return DECODER::detect_parity(data);
+    case ERROR::CRC: return DECODER::detect_crc(data);
     default: break;
     }
 
