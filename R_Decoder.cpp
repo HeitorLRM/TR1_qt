@@ -31,6 +31,7 @@ std::string Decoder::listen_frame() {
     case ERROR::NONE: return data;
     case ERROR::PARITY_BIT: return DECODER::detect_parity(data);
     case ERROR::CRC: return DECODER::detect_crc(data);
+    case ERROR::HAMMING: return DECODER::detect_hamming(data);
     default: break;
     }
 

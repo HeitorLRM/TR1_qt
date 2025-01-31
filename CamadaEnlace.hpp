@@ -38,6 +38,8 @@ std::string detect_parity(const std::string&);
 
 std::string detect_crc(const std::string&);
 
+std::string detect_hamming(std::string);
+
 }
 
 #endif // CAMADAENLACE_HPP

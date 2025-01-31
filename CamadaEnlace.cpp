@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 // Codigo para obter um bit de uma sequencia de bytes em string
 bool str_get_bit(const std::string& s, unsigned index) {
@@ -260,7 +262,7 @@ std::string DECODER::deframe_insert() {
 
 std::string DECODER::detect_parity(const std::string& frame) {
     if (_parity(frame)) // Paridade, quando incluso bit de paridade, deve ser 0.
-        return "\nQUADRO COM ERRO";
+        return "\nERROR DETECTED";
 
     return std::string(frame.begin(), frame.end() -1);
 }
@@ -275,7 +277,64 @@ std::string DECODER::detect_crc(const std::string& frame) {
     crc2 <<= 8; crc2 += static_cast<unsigned char>(crc_str[1]);
     crc2 <<= 8; crc2 += static_cast<unsigned char>(crc_str[2]);
     crc2 <<= 8; crc2 += static_cast<unsigned char>(crc_str[3]);
-    if (crc2 != crc1) return ("\nQUADRO COM ERRO");
+    if (crc2 != crc1) return ("\nERROR DETECTED");
 
     return message;
 }
+
+
+std::string DECODER::detect_hamming(std::string data) {
+    unsigned data_bit_count = data.size()*8;
+
+    // Calculo dos indices de pbits
+    std::vector<unsigned> indexes;
+    for (
+        unsigned pow = 0, pos = 0;
+        pos < data_bit_count;
+        pos = (0x1 << ++pow) - 1 // off by one
+        )
+        indexes.push_back(pos);
+
+    // 0btem os bits de paridade recebidos
+    unsigned inc_pbits = 0;
+    for (auto it = indexes.rbegin(); it != indexes.rend(); it++) {
+        unsigned pos = *it;
+        inc_pbits <<= 1;
+        if (str_get_bit(data, pos))
+            inc_pbits |= 1;
+    }
+
+    // Calcula quantos bytes tinha a mensagem original
+    unsigned msg_byte_count = (data_bit_count - indexes.size()) / 8;
+    // Reconstroi a mensagem
+    std::string message(msg_byte_count, 0x0);
+    for (
+        unsigned data_pos = 0, message_pos = 0;
+        message_pos < msg_byte_count*8;
+        data_pos++, message_pos++
+        ) {
+        // Pula se for bit de paridade
+        if (std::find(indexes.begin(), indexes.end(), data_pos) != indexes.end()) {
+            message_pos--;
+            continue;
+        }
+
+        str_set_bit(message, message_pos, str_get_bit(data, data_pos));
+    }
+
+    // Verifica os bits de paridade esperados
+    std::string control = ENCODER::hamming(message);
+    unsigned exp_pbits = 0;
+    for (auto it = indexes.rbegin(); it != indexes.rend(); it++) {
+        unsigned pos = *it;
+        exp_pbits <<= 1;
+        if (str_get_bit(control, pos))
+            exp_pbits |= 1;
+    }
+
+    unsigned err = exp_pbits ^ inc_pbits;
+    if (!err) return message;
+
+    return "\nERROR DETECTED";
+}
+
