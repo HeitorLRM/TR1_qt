@@ -4,6 +4,51 @@
 #include <cstdint>
 #include <iostream>
 
+// Codigo para obter um bit de uma sequencia de bytes em string
+bool str_get_bit(const std::string& s, unsigned index) {
+    unsigned byte = index/8;
+    unsigned b_off = index%8;
+    return s[byte] & (0x1 << (7-b_off));
+}
+
+// Codigo para definir um bit de uma sequencia de bytes em string
+void str_set_bit(std::string& s, unsigned index, bool bit) {
+    unsigned byte = index/8;
+    unsigned b_off = index%8;
+    char& c = s[byte];
+    unsigned char mask = 0x1 << (7-b_off);
+    c &= ~mask;
+    if (bit) c |= mask;
+}
+
+// Lê 32 bits de uma posição da string
+uint32_t fetch_32(const std::string& s, unsigned bit_index) {
+    uint32_t result = 0;
+    for (unsigned i = 0; i < 32; i++) {
+        unsigned bit = i + bit_index;
+        unsigned byte = bit/8;
+        unsigned bit_off = bit%8;
+        unsigned c = static_cast<unsigned>(s[byte]);
+        c >>= 7-bit_off;
+        c &= 0x1;
+        result |= c << (31-i);
+    }
+    return result;
+}
+
+// Escreve 32 bits numa string
+void write_32(std::string& s, unsigned bit_index, uint32_t val) {
+    for (unsigned i = 0; i < 32; i++) {
+        bool set = val & 1 << (31-i);
+        unsigned bit = i + bit_index;
+        unsigned byte = bit/8;
+        unsigned bit_off = bit%8;
+        char mask = 1 << (7-bit_off);
+        s[byte] &= ~mask;
+        if (set) s[byte] |= mask;
+    }
+}
+
 std::string ENCODER::encode_msg(const std::string& message, FRAMING framing, ERROR error_mode) {
     // Mensagem precisa caber no quadro
     if (message.size() > max_bytes) {
@@ -18,7 +63,7 @@ std::string ENCODER::encode_msg(const std::string& message, FRAMING framing, ERR
     case ERROR::NONE:         err_encoded = message;            break;
     case ERROR::PARITY_BIT:   err_encoded = parity(message);    break;
     case ERROR::CRC:          err_encoded = CRC(message);       break;
-    case ERROR::HAMMING:      err_encoded = Hamming(message);   break;
+    case ERROR::HAMMING:      err_encoded = hamming(message);   break;
     default:break;
     }
 
@@ -79,34 +124,6 @@ std::string ENCODER::parity(const std::string& message) {
     return new_message;
 }
 
-// Lê 32 bits de uma posição da string
-uint32_t fetch_32(const std::string& s, unsigned bit_index) {
-    uint32_t result = 0;
-    for (unsigned i = 0; i < 32; i++) {
-        unsigned bit = i + bit_index;
-        unsigned byte = bit/8;
-        unsigned bit_off = bit%8;
-        unsigned c = static_cast<unsigned>(s[byte]);
-        c >>= 7-bit_off;
-        c &= 0x1;
-        result |= c << (31-i);
-    }
-    return result;
-}
-
-// Escreve 32 bits numa string
-void write_32(std::string& s, unsigned bit_index, uint32_t val) {
-    for (unsigned i = 0; i < 32; i++) {
-        bool set = val & 1 << (31-i);
-        unsigned bit = i + bit_index;
-        unsigned byte = bit/8;
-        unsigned bit_off = bit%8;
-        char mask = 1 << (7-bit_off);
-        s[byte] &= ~mask;
-        if (set) s[byte] |= mask;
-    }
-}
-
 uint32_t crc32(std::string message) {
     // polinomio crc32, de acordo com IEEE
     // x32 + x26 + x23 + x22 + x16 + ...
@@ -147,8 +164,70 @@ std::string ENCODER::CRC(const std::string& message) {
     return message + std::string{c0,c1,c2,c3};
 }
 
-std::string ENCODER::Hamming(const std::string& message) {
-    return message;
+unsigned bin_digit_count(unsigned number) {
+    // Numero de digitos de um numero binario
+    return log2(number) + 1;
+}
+
+unsigned hamming_pbits_count(unsigned mbit_count) {
+    // Numero de bits de paridade necessarios para uma mensagem com m bits
+    unsigned pbits = bin_digit_count(mbit_count);
+    mbit_count += pbits;
+    return bin_digit_count(mbit_count);
+}
+
+unsigned hamming_total_bytes(unsigned message_size) {
+    //
+    unsigned mbits = message_size * 8;
+    unsigned pbits = hamming_pbits_count(mbits);
+    unsigned tbits = mbits + pbits;
+    unsigned bytes = tbits / 8;
+    if (tbits % 8) bytes++;
+    return bytes;
+}
+
+bool hamming_parity(const std::string& s, unsigned pbit) {
+    unsigned _1_count = 0;
+    unsigned sbit_count = s.size() * 8;
+
+    // Começando do p-1, pega p, pula p.
+    for (unsigned i = pbit-1; true; i += pbit) {
+        // Anda p indices
+        for (unsigned step_end = i+pbit; i < step_end; i++) {
+            if (i > sbit_count) return _1_count % 2;
+
+            // calcula a paridade
+            if (str_get_bit(s, i))
+                _1_count++;
+        }
+        // Pula p indices
+    }
+}
+
+std::string ENCODER::hamming(const std::string& message) {
+    std::string result(hamming_total_bytes(message.size()),0x0); // Tamanho final, preenchida com zeros
+
+    unsigned mbit_count = message.size() * 8; // bits de mensagem
+    unsigned pbit_count = hamming_pbits_count(mbit_count); // bits de paridade
+
+    // Transferir bits de mensagem para seus novos indices
+    for (unsigned i = 0; i < mbit_count; i++) {
+        bool mbit = str_get_bit(message, i);
+        unsigned pos = i + hamming_pbits_count(i+1);
+        str_set_bit(result, pos, mbit);
+    }
+
+    // Calcular os bits de paridade
+    for (unsigned i = 0; i < pbit_count; i++) {
+        // Do maior para o menor
+        unsigned p = pbit_count - i;
+        // Pbits sao potencias de 2
+        p = 0x1 << (p-1);
+        bool pbit_parity = hamming_parity(result, p);
+        str_set_bit(result, p-1, pbit_parity);
+    }
+
+    return result;
 }
 
 

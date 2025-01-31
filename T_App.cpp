@@ -295,7 +295,7 @@ void TransmitterAPP::on_btn_preview_clicked() {
     case ERROR::NONE        : after_error = message; break;
     case ERROR::PARITY_BIT  : after_error = ENCODER::parity(message); break;
     case ERROR::CRC         : after_error = ENCODER::CRC(message); break;
-    case ERROR::HAMMING     : after_error = ENCODER::CRC(message); break;
+    case ERROR::HAMMING     : after_error = ENCODER::hamming(message); break;
     default: break;
     }
     populate_series_digital(err_series, after_error);

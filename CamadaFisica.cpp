@@ -67,17 +67,18 @@ float MODULATOR::_8_QAM(bool bit, float bit_progress, bool should_update) {
     // O 8-QAM consegue codificar 3 bits em termos de fase e amplitude
     std::complex<float> c; // numeros complexos em coordenadas polares tem fase e amplitude.
     float l = 0.707106781185; // sqrt(2)/2
+    float h = 1.73205080757; // sqrt(3)
     // A seguinte é a tabela que mapeia os 3 bits para numeros complexos.
 
     switch (tribit) {
-    case 0x0: c = { l,-l}; break;
-    case 0x1: c = { 1, 0}; break;
-    case 0x2: c = { l, l}; break;
-    case 0x3: c = { 0, 1}; break;
-    case 0x4: c = {-l, l}; break;
-    case 0x5: c = {-1, 0}; break;
-    case 0x6: c = {-l,-l}; break;
-    case 0x7: c = { 0,-1}; break;
+    case 0x0: c = { h, 0}; break;
+    case 0x1: c = { l, l}; break;
+    case 0x2: c = {-l, l}; break;
+    case 0x3: c = { 0, h}; break;
+    case 0x4: c = { l,-l}; break;
+    case 0x5: c = { 0,-h}; break;
+    case 0x6: c = {-h, 0}; break;
+    case 0x7: c = {-l,-l}; break;
     default: break;
     }
     float phase    = std::arg(c);

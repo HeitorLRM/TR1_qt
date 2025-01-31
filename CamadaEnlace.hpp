@@ -25,7 +25,7 @@ std::string parity(const std::string&);
 
 std::string CRC(const std::string&);
 
-std::string Hamming(const std::string&);
+std::string hamming(const std::string&);
 }
 
 namespace DECODER {
