@@ -335,6 +335,8 @@ std::string DECODER::detect_hamming(std::string data) {
     unsigned err = exp_pbits ^ inc_pbits;
     if (!err) return message;
 
-    return "\nERROR DETECTED";
+    // Corrige a mensagem
+    str_set_bit(data, !str_get_bit(data, err), err);
+    return message;
 }
 
