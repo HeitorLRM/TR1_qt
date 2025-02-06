@@ -60,7 +60,7 @@ ReceiverAPP::ReceiverAPP(QWidget *parent)
 
     QActionGroup* frame_group = new QActionGroup(this);
     frame_group->addAction(ui->actionByte_Counting);
-    frame_group->addAction(ui->actionBite_Insertion);
+    frame_group->addAction(ui->actionByte_Insertion);
     frame_group->setExclusive(true);
     QObject::connect(frame_group, &QActionGroup::triggered, this, &ReceiverAPP::on_framing_selected);
 
@@ -148,7 +148,7 @@ void ReceiverAPP::on_modulation_selected(QAction* action) {
 
 void ReceiverAPP::on_framing_selected(QAction* action) {
     std::string text = action->text().toStdString();
-    if (text == "Bite &Insertion") settings.framing = FRAMING::BYTE_INSERION;
+    if (text == "Byte &Insertion") settings.framing = FRAMING::BYTE_INSERION;
     if (text == "&Byte Counting")  settings.framing = FRAMING::BYTE_COUNT;
     emit settings_changed(settings);
 }

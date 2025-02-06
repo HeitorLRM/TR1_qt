@@ -46,6 +46,8 @@ float MODULATOR::freq_shift_key(bool bit, float bit_progress) {
 }
 
 float MODULATOR::_8_QAM(bool bit, float bit_progress, bool should_update) {
+    const float freq_0 = 4.0;
+
     // Código para acumular 3 bits
     static unsigned b_count = 0;
     static unsigned char tribit = 0;
@@ -85,7 +87,7 @@ float MODULATOR::_8_QAM(bool bit, float bit_progress, bool should_update) {
     float amp_mult = std::abs(c); // Obtemos fase e amplitude
 
     float tribit_progress = (b_count + bit_progress)/3.0; // O periodo engloba 3 bits
-    float t = 2.0 * M_PI * tribit_progress + phase;
+    float t = 2.0 * M_PI * tribit_progress * freq_0 + phase;
     float carrier = sin(t);
     float amp = amplitude * amp_mult;
 
