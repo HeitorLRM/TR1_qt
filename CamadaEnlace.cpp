@@ -335,8 +335,15 @@ std::string DECODER::detect_hamming(std::string data) {
     unsigned err = exp_pbits ^ inc_pbits;
     if (!err) return message;
 
+    // Erro no EDC não altera a mensagem
+    if (log2(err) == int(log2(err))) // log2 redondo => potencia de 2
+        return message;
+
     // Corrige a mensagem
-    str_set_bit(data, !str_get_bit(data, err), err);
+    unsigned pbit_count = int(log2(err)) + 1;
+    unsigned err_pos = err - pbit_count -1;
+    str_set_bit(message, !str_get_bit(message, err_pos), err_pos);
+
     return message;
 }
 
